@@ -1,0 +1,66 @@
+class Item extends React.Component {
+    render() {
+        return (
+            <li className="list-group-item">
+                <div className="handle">
+                    <a href="#" className="btn btn-primary btn-sm active" role="button">删除</a>
+                </div>
+                <p className="user"><span>xxx</span><span>说:</span></p>
+                <p className="comment-content">React不错!</p>
+            </li>
+        )
+    }
+}
+class List extends React.Component {
+    render() {
+        return (
+            <div className="col-md-8 col-lg-8">
+                <h3 className="reply">评论回复：</h3>
+                <h2 style={{display: "none"}}>暂无评论，点击左侧添加评论！！！</h2>
+                <ul className="list-group">
+                    <Item />
+                </ul>
+            </div>
+        )
+    }
+}
+class Add extends React.Component {
+    render() {
+        return (
+            <div className="col-md-4 col-lg-4">
+                <form>
+                    <div className="form-group">
+                        <label for="exampleInputEmail1">用户名</label>
+                        <input type="text" className="form-control" placeholder="请输入您的用户名" />
+                    </div>
+                    <div className="form-group">
+                        <label for="exampleInputPassword1">评论</label>
+                        <textarea className="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-md active">Submit</button>
+                </form>
+            </div>
+        )
+    }
+}
+
+class App extends React.Component {
+    render() {
+        return (
+            <div className="container-fluid">
+            <div className="row">
+                <div className="jumbotron">
+                    <h1>!!!</h1>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12 col-lg-12 outer">
+                    <Add/>
+                    <List/>
+                </div>
+            </div>
+        </div>
+        )
+    }
+}
+ReactDOM.render(<App/>,document.getElementById('test'))

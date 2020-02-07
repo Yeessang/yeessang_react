@@ -1,0 +1,130 @@
+class Game extends React.Component{
+    state = {
+        xIsNext:true,
+        history:[
+            {
+                squares:Array(9).fill(null)
+            },
+        ],
+        stepNumber:0
+    }
+    judgeWinner = (squares) => {
+        const lines = [
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
+            [1,4,7],
+            [2,5,8],
+            [2,4,6],
+            [3,4,5],
+            [6,7,8]
+        ];
+        for(var i = 0; i < lines.length; i++){
+            if(squares[lines[i][0]] && squares[lines[i][0]] === squares[lines[i][1]] && squares[lines[i][0]] === squares[lines[i][2]]){
+                return squares[lines[i][0]];
+            }
+        }
+
+        return null
+            
+    }
+    changeState = (i) => {
+        let {xIsNext,history} = this.state;
+        this.state.history.length = this.state.stepNumber + 1;
+        let {squares} = this.state.history[this.state.history.length - 1];
+        if(squares[i] || this.judgeWinner(squares)) return;
+        let NowSquares = squares.slice();
+        xIsNext ? NowSquares[i] = "X" : NowSquares[i] = "O";
+        history.push({squares:NowSquares});
+        console.log(history,i);
+        this.setState({history:history,xIsNext:!xIsNext,stepNumber:history.length - 1})
+    }
+    backToHistory = (index) => {
+        
+        let {stepNumber,history,xIsNext} = this.state;
+        if(stepNumber === index) return;
+        if(index % 2 === 0){
+            xIsNext = true;
+        }else{
+            xIsNext = false;
+        }
+        for(var i in this.refs){
+            this.refs[i].className = "";
+        }
+        this.refs[`li${index}`].className = "historyNow";
+        this.setState({
+            history:history,
+            stepNumber:index,
+            xIsNext:xIsNext
+        })
+    }
+    render(){
+        const status = `时间旅行列表：共有${this.state.history.length}次历史`;
+        const {stepNumber} = this.state;
+        const history = this.state.history.slice(0,stepNumber+1);
+        console.log(history)
+        return (
+            <div className="game">
+                <div className="game-board">
+                    <Board judgeWinner={this.judgeWinner} changeState={this.changeState} xIsNext={this.state.xIsNext} squares={history[history.length - 1].squares}/>
+                </div>
+                <div className="game-info">
+                    <div>{status}</div>
+                    <ol>
+                        {
+                            this.state.history.map((item,index) => {
+                                return <li key={index}><button ref={`li${index}`} onClick={()=>this.backToHistory(index)}>点击回退到历史第{index+1}版本</button></li>
+                            })
+                        }
+                    </ol>
+                </div>
+            </div>
+        )
+    }
+}
+
+class Board extends React.Component{
+   
+    renderSquare = (i) => {
+        return <Square value={this.props.squares[i]} changeState={() => {this.props.changeState(i)}}/>
+    }
+    render(){
+        const winner = this.props.judgeWinner(this.props.squares);
+        console.log(winner);
+        let status;
+        if(winner){
+            status = `Winner is  ${winner}`
+        }else{
+            status = `Next One Is ${this.props.xIsNext ? "X" : "O"}`
+        }
+        return (
+            <div>
+                <div className="status">{status}</div>
+                <div className="board-row">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                </div>
+            </div>
+        )
+    }
+}
+
+class Square extends React.Component{
+    render(){
+        const {value,changeState} = this.props;
+        return <button className="square" onClick={changeState}>{value}</button>
+    } 
+}
+
+ReactDOM.render(<Game/>,document.getElementById('root'));

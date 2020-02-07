@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 引入react核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入react-dom，用于操作DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入babel 用于解析jsx为js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        let arr = ["Angular","React","vue","jQuery"];
+        let title = "前端js框架列表" ;
+        let vDOM = (
+            <div>
+                <h1>{title}</h1>
+                <ul>
+                    // {}11111
+                    {
+                        arr.map(function(item,index){
+                            return <li key={index}>{item}</li>
+                        })
+                    }   
+                </ul>
+            </div>
+        );
+
+        ReactDOM.render(vDOM,document.body);
+    </script>
+</body>
+
+</html>

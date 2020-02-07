@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="todoList"></div>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        let arr = ["勒布朗","布莱恩特","德维恩"]
+        class App extends React.Component{
+            state = {peoples:arr}
+            render(){
+                console.log(this)
+                const {peoples} = this.state
+                return (
+                    <div>
+                        <h1>TODO List</h1>
+                        <Add/>
+                        <List peoples={peoples}/>
+                    </div>
+                )
+            }
+        }
+
+        class Add extends React.Component{
+            render(){
+                return (
+                    <div>
+                        <input type="text" />
+                        <button type="submit">Add #100</button>
+                    </div> 
+                )
+            }
+        }
+
+        class List extends React.Component{
+            render(){
+                console.log(this)
+                const {peoples} = this.props;
+                return (
+                    <ul>
+                        {
+                            peoples.map((item,index) => {
+                                return <li key={index}>{item}</li>
+                            })
+                        }
+                    </ul>
+                )
+            }
+        }
+
+        ReactDOM.render(<App/>,document.getElementById('todoList'))
+    </script>
+</body>
+
+</html>

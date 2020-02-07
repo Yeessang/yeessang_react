@@ -1,0 +1,108 @@
+body {
+    font: 14px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+  }
+  html{
+    background-image: url(../img/2ec7d598ab448b88d711729d2d8012ba.jpg);
+    background-size: cover;
+  }
+  ol, ul {
+    padding-left: 30px;
+    list-style: none;
+  }
+  
+  .board-row:after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+  
+  .status {
+    text-align: center;
+    color:#fff;
+    margin-bottom: 10px;
+    background-image: linear-gradient(to right,gold,purple);
+    border-radius:10px;
+  }
+  
+  .square {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+  }
+  .squareWinLine{
+    animation: winner 1s infinite;
+  }
+  .square:focus {
+    outline: none;
+  }
+  
+  .kbd-navigation .square:focus {
+    background: #ddd;
+  }
+  #root{
+    width: 400px;
+    
+    overflow: hidden;
+  }
+  .game {
+    border-radius: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 300px;
+    background-color: rgba(80,80,80,0.8);
+  }
+  
+  .game-info {
+    margin-left: 20px;
+    
+  }
+  .game-info>div:nth-child(1){
+    text-align: center;
+    border-radius:10px;
+    color:#fff;
+    background-image: linear-gradient(to right,purple,gold);
+  }
+  .game-info button{
+    color:#fff;
+    border:none;
+    outline: none;
+    background-image: linear-gradient(to right,purple,gold);
+    border-radius: 10px;
+    margin-bottom: 3px;
+    width: 160px;
+    text-align: center;
+  }
+  .game-info .historyNow{
+      font-weight: bold;
+      background-image: none;
+      background-color: purple;
+  }
+  .game-info button.Prev{
+    width: 80px;
+  }
+  .game-info button.Next{
+    width: 80px;
+  }
+
+  @keyframes winner {
+    0%{
+      color:rgb(140, 0, 255)
+    }
+    50%{
+      color: rgb(255, 196, 0);
+    }
+    100%{
+      color: rgb(140, 0, 255);
+    }
+  }

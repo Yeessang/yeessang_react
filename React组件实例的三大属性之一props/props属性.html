@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="test"></div><div id="test2"></div>
+    <!-- 引入react核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入react-dom，用于操作DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入babel 用于解析jsx为js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Person extends React.Component{
+            a = 100;
+            //该属性用来设置通过</Person> 传进来的props属性的类型以及是否为必须的
+            static propTypes = {
+                name:PropTypes.string.isRequired,
+                age:PropTypes.number,
+                sex:PropTypes.string,
+                hobby:PropTypes.string
+            }
+            //static 静态属性，不会被该类的实例获取，而是只存在于该类中
+            //保存在Person构造函数中，而不是Person.prototype中
+            //保存到Person.prototype中的内容只是该类大括号中的方法
+
+            //defaultProps 用来设置 写入的属性props的默认值
+            static defaultProps = {
+                age:18,
+                sex:"男",
+                hobby:"篮球"
+            }
+            render(){
+                console.log(this);
+                //通过解构赋值来进行变量的赋值，简化了操作
+                const {name,age,sex,hobby} = this.props;
+                return <ul>
+                            <li>姓名：{name}</li>
+                            <li>年龄：{age}</li>
+                            <li>性别：{sex}</li>
+                            <li>爱好：{hobby}</li>
+                       </ul>
+            }
+        }
+
+        let person1 = {name:"kobe",age:41,sex:"男",hobby:"篮球"};
+        let person2 = {name:"james",age:35,sex:"男",hobby:"篮球"};
+        console.log(Person)
+        console.log(Person.prototype)
+        console.log(Person.prototype.constructor)
+        ReactDOM.render(<Person name={person1.name}/>,document.getElementById('test'));
+        //...person2这种语法，在es6里的迭代器 是不支持，因为person2是对象，但是在React和babel库中
+        //对...person2进行了底层的操作，使得对象也可以使用这种语法去迭代，进行拆包
+        //所以这时类的实例的props属性保存的自然是拆包后的各种属性组成的对象集合
+        ReactDOM.render(<Person {...person2}/>,document.getElementById('test2'));
+
+    </script>
+</body>
+</html>

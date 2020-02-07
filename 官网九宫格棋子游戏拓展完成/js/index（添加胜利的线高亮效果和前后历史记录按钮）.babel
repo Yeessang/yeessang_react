@@ -1,0 +1,177 @@
+class Game extends React.Component{
+    state = {
+        xIsNext:true,
+        history:[
+            {
+                squares:Array(9).fill(null)
+            },
+        ],
+        stepNumber:0,
+        isFill:false,
+        winLine:null
+    }
+    judgeWinner = (squares) => {
+        const lines = [
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
+            [1,4,7],
+            [2,5,8],
+            [2,4,6],
+            [3,4,5],
+            [6,7,8]
+        ];
+        for(var i = 0; i < lines.length; i++){
+            if(squares[lines[i][0]] && squares[lines[i][0]] === squares[lines[i][1]] && squares[lines[i][0]] === squares[lines[i][2]]){
+                return {
+                     winValue:squares[lines[i][0]],
+                     winLine:lines[i]
+                }
+            }
+        }
+
+        return null
+            
+    }
+    componentDidUpdate(prevProps, prevState) {
+        console.log(this.state.stepNumber);
+        this.changeWeight(this.state.stepNumber);
+    }
+    changeWeight = (index) => {
+        for(var i in this.refs){
+            this.refs[i].className = "";
+        }
+        this.refs[`li${index}`].className = "historyNow";
+    }
+    changeState = (i) => {
+        let {xIsNext,history,isFill,winLine} = this.state;
+        history.length = this.state.stepNumber + 1;
+        let {squares} = history[history.length - 1];
+        if(squares[i] || this.judgeWinner(squares)){
+            return;
+        } 
+        let NowSquares = squares.slice();
+        xIsNext ? NowSquares[i] = "X" : NowSquares[i] = "O";
+        history.push({squares:NowSquares});
+        if(history.length == 10) isFill = true;
+        winLine = this.judgeWinner(NowSquares) ? this.judgeWinner(NowSquares).winLine : null;
+        console.log(winLine);
+        this.setState({history:history,xIsNext:!xIsNext,stepNumber:history.length - 1,isFill:isFill,winLine:winLine})
+        
+    } 
+    backToHistory = (index) => {
+        
+        let {stepNumber,history,xIsNext,isFill,winLine} = this.state;
+        if(typeof index === "number"){
+            if(stepNumber === index) return;
+        }else{
+            if(index && stepNumber < history.length - 1) index = ++stepNumber;
+            else if(!index && stepNumber > 0) index = --stepNumber;
+            else return;
+        }
+        if(index % 2 === 0){
+            xIsNext = true;
+        }else{
+            xIsNext = false;
+        }
+        if(index < 9){
+            isFill = false;
+        }else{
+            isFill = true;
+        }
+        if(index < history.length - 1){
+            winLine = null;
+        }else{
+            console.log(history[index].squares);
+            if(this.judgeWinner(history[index].squares)){
+                winLine = this.judgeWinner(history[index].squares).winLine
+            }
+        }
+        // console.log(index);
+        this.setState({
+            history:history,
+            stepNumber:index,
+            xIsNext:xIsNext,
+            isFill:isFill,
+            winLine:winLine
+        })
+    }
+    render(){
+        const status = `时间旅行列表：共有${this.state.history.length}次历史`;
+        const {stepNumber} = this.state;
+        const history = this.state.history.slice(0,stepNumber+1);
+        return (
+            <div className="game">
+                <div className="game-board">
+                    <Board judgeWinner={this.judgeWinner} changeState={this.changeState} xIsNext={this.state.xIsNext} squares={history[history.length - 1].squares} isFill={this.state.isFill} winLine={this.state.winLine}/>
+                </div>
+                <div className="game-info">
+                    <div>{status}</div>
+                    <ul>
+                        {
+                            this.state.history.map((item,index) => {
+                                return <li key={index}><button ref={`li${index}`} onClick={()=>this.backToHistory(index)}>{index === 0 ? `Game Start`:`点击回退到历史第${index}版本`}</button></li>
+                            })
+                        }
+                        <li><button className="Prev" onClick={()=>this.backToHistory(false)}>上一个</button><button className="Next" onClick={()=>this.backToHistory(true)}>下一个</button></li>
+                    </ul>
+                </div>
+            </div>
+        )
+    }
+}
+
+class Board extends React.Component{
+   
+    renderSquare = (i) => {
+        return <Square number={i} value={this.props.squares[i]} changeState={() => {this.props.changeState(i)}} winLine={this.props.winLine}/>
+    }
+    render(){
+        const winner = this.props.judgeWinner(this.props.squares) ? this.props.judgeWinner(this.props.squares).winValue : this.props.judgeWinner(this.props.squares);
+        let status;
+        if(winner){
+                status = `Winner is  ${winner}`;
+        }else{
+                if(this.props.squares.length === 9 && this.props.isFill){
+                    status = "平局，没有人胜出";
+                }else{
+                    status = `Next One Is ${this.props.xIsNext ? "X" : "O"}`;
+                }
+                
+        }
+        
+        return (
+            <div>
+                <div className="status">{status}</div>
+                <div className="board-row">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                </div>
+            </div>
+        )
+    }
+}
+
+class Square extends React.Component{
+    render(){
+        const {value,changeState,winLine,number} = this.props;
+        if(winLine && winLine.indexOf(number) !== -1){
+            return <button className="square squareWinLine" onClick={changeState}>{value}</button>
+        }else{
+            return <button className="square" onClick={changeState}>{value}</button>
+        }
+        
+    } 
+}
+ReactDOM.render(<Game/>,document.getElementById('root'));

@@ -1,0 +1,121 @@
+class Game extends React.Component{
+    state = {
+        xIsNext:true,
+        history:[
+            {
+                squares:Array(9).fill(null)
+            },
+        ]
+    }
+    render(){
+        return (
+            <div className="game">
+                <div className="game-board">
+                    <Board/>
+                </div>
+                <div className="game-info">
+                    <div>{/*status*/ }</div>
+                    <ol>
+                        {/*todo*/ }
+                    </ol>
+                </div>
+            </div>
+        )
+    }
+}
+
+class Board extends React.Component{
+    state = {
+        xIsNext:true,
+        squares:Array(9).fill(null)
+    }
+    judgeWinner = (squares) => {
+        const lines = [
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
+            [1,4,7],
+            [2,5,8],
+            [2,4,6],
+            [3,4,5],
+            [6,7,8]
+        ];
+        for(var i = 0; i < lines.length; i++){
+            if(squares[lines[i][0]] && squares[lines[i][0]] === squares[lines[i][1]] && squares[lines[i][0]] === squares[lines[i][2]]){
+                return squares[lines[i][0]];
+            }
+        }
+
+        return null
+            
+    }
+    changeState = (i) => {
+        let {xIsNext} = this.state;
+        if(this.state.squares[i] || this.judgeWinner(this.state.squares)) return;
+        let squares = this.state.squares.slice();
+        xIsNext ? squares[i] = "X" : squares[i] = "O";
+        console.log(squares,i);
+        this.setState({squares:squares,xIsNext:!xIsNext})
+    }
+    renderSquare = (i) => {
+        return <Square value={this.state.squares[i]} changeState={() => {this.changeState(i)}}/>
+    }
+    render(){
+        const winner = this.judgeWinner(this.state.squares);
+        console.log(winner);
+        let status;
+        if(winner){
+            status = `Winner is  ${winner}`
+        }else{
+            status = `Next One Is ${this.state.xIsNext ? "X" : "O"}`
+        }
+        return (
+            <div>
+                <div className="status">{status}</div>
+                <div className="board-row">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                </div>
+            </div>
+        )
+    }
+}
+
+class Square extends React.Component{
+    // state = {
+    //     xIsNext:true,
+    //     status:null
+    // } 
+    
+    // handleClick = () => {
+    //     let {state,changeState} = this.props;
+    //     let {xIsNext} = state;
+    //     let {status} = this.state;
+    //     if(status === "X" || status === "O") return;
+    //     if(xIsNext){
+    //         this.setState({status:"X",xIsNext:!xIsNext});
+    //         changeState({status:"X",xIsNext:!xIsNext})
+    //     }else{
+    //         this.setState({status:"O",xIsNext:!xIsNext})
+    //         changeState({status:"O",xIsNext:!xIsNext})
+    //     }
+    //     // xIsNext ? this.setState({status:"X",xIsNext:!xIsNext}) : this.setState({status:"O",xIsNext:!xIsNext})
+    // }
+    render(){
+        const {value,changeState} = this.props;
+        return <button className="square" onClick={changeState}>{value}</button>
+    } 
+}
+
+ReactDOM.render(<Game/>,document.getElementById('root'));

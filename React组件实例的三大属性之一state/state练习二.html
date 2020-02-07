@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test">
+
+
+    </div>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+    //简单写法
+        // class Weather extends React.Component{
+        //     state = {isHot:true}
+        //     handleClick = () => {
+        //       let {isHot} = this.state;
+        //       this.setState({isHot:!isHot});
+        //     }
+        //     render(){
+        //         return <h1 onClick={this.handleClick}>今天天气真{this.state.isHot ? "炎热" : "凉爽"}</h1>
+        //     }
+        // }
+    //麻烦写法，易理解
+        class Weather extends React.Component{
+            constructor(){
+                super();
+                this.state = {isHot:true};
+                this.handleClick = this.handleClick.bind(this);
+            }
+            //在React组件中，如果在继承的子类中定义了不是React类中本身就有的函数名的函数，那么我们自定义的函数中的this将是undefined
+            //所以如果想要继续以这种方式给原型上加，那就需要将定义在子类原型上的自定义方法的this绑定为我们创造的实例
+            //即在构造器函数中，将这个自定义的函数内部的this绑定为实例，指向实例
+            handleClick(){
+                console.log(this);
+                let {isHot} = this.state
+                this.setState({isHot:!isHot});
+            }
+            render(){
+                return <h1 onClick={this.handleClick}>今天天气真{this.state.isHot ? "炎热" : "凉爽"}</h1>
+            }
+        }
+        ReactDOM.render(<Weather/>,document.getElementById('test'));
+    </script>
+</body>
+
+</html>

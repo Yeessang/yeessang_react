@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <!-- 引入react核心库 -->
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <!-- 引入react-dom，用于操作DOM -->
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <!-- 引入babel 用于解析jsx为js -->
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+        class Weather extends React.Component{
+            //class类中 如果有赋值语句，那么这个被赋值的变量将会作为这个class类的实例的属性
+            state = {isHot:true}
+            //箭头函数中的this由定义的时候决定，箭头函数的this是外层函数的this，如果没有外层函数那么this就是window
+            handleClick = () => {
+                let isHot = this.state.isHot;
+                //组件类实例对象的三大属性之一的state属性，我们是无法自定义去修改的
+                //只能使用组件内置的方法setState（）来修改state内的属性
+                //假如state的对象内有很多属性，但是setState（）方法修改的state对象内的属性，不会影响到其他不同名的属性
+                this.setState({isHot:!isHot});
+            }
+            //在React.Component组件类的子类中，在前者组件类中定义的方法，并且在子类中修改的重名的方法中的this才是子类的实例
+            //但是在子类中的我们自定义的方法中的this的指向是undefined
+            //所以当我们想需要在组件类的子类中的自定义的方法中的this
+            //我们需要去通过其他方式，使用bind（）方法将自定义方法中的this绑定为想要的指向
+            render(){
+                //jsx语法中需要js的变量表示的需要用{}来包含。{}括号内是js的表达式！
+                //{}解析的语法是js的语法
+                return <h1 onClick={this.handleClick}>今天天气真{this.state.isHot ? "炎热" : "凉爽"}</h1>
+            }
+        }
+        //在babel语法 jsx语法中，<Weather/>这种语法会解析为相当于 new Weather（）产生实例对象
+        //并调用了Weather类内的render方法
+        ReactDOM.render(<Weather/>,document.getElementById('test'))
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用户评论</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+    </script>
+</head>
+
+<body>
+    <div class="container" id="test">
+
+    </div>
+    <script type="text/javascript" src="baseJs/react.development.js"></script>
+    <script type="text/javascript" src="baseJs/react-dom.development.js"></script>
+    <script type="text/javascript" src="baseJs/babel.min.js"></script>
+    <script type="text/babel">
+        class Item extends React.Component {
+            handleClick = () => {
+              const {comment,deleteComment} = this.props;
+              const {id} = comment;
+              if(confirm("您确定要删除该条评论吗？")){
+                deleteComment(id);
+              }else{
+                  return;
+              }
+              
+            }
+            
+            render() {
+                const {name,content} = this.props.comment;
+                return (
+                    <li className="list-group-item">
+                        <div className="handle">
+                            <a href="#" className="btn btn-primary btn-sm active" role="button" onClick={this.handleClick}>删除</a>
+                        </div>
+                        <p className="user"><span>{name}</span><span>说:</span></p>
+                        <p className="comment-content">{content}</p>
+                    </li>
+                )
+            }
+        }
+        class List extends React.Component {
+            render() {
+                const {comments,deleteComment} = this.props;
+                return (
+                    <div className="col-md-8 col-lg-8">
+                        <h3 className="reply">评论回复：</h3>
+                        <h2 style={{display: comments.length === 0 ? "block" : "none"}}>暂无评论，点击左侧添加评论！！！</h2>
+                        <ul className="list-group">
+                            {
+                                comments.map((comment) => {
+                                  return <Item key={comment.id} comment={{...comment}} deleteComment={deleteComment}/>
+                                })
+                            }
+                        </ul>
+                    </div>
+                )
+            }
+        }
+        class Add extends React.Component {
+            myRef = React.createRef();
+            num = this.props.comments.length;
+            onClick = (e) => {
+                const comments = this.props.comments.slice();
+                const {changeState} = this.props;
+                const name = this.input.value;
+                const content = this.myRef.current.value;
+                if(name.trim() === "" || content.trim() === ""){
+                    alert("请不要输入空字符");
+                }else{
+                    const id = ++this.num; 
+                    console.log(id);
+                    let newComment = {id,name,content}
+                    comments.unshift(newComment);
+                    changeState(comments);
+                }
+                this.input.value = this.myRef.current.value = "";
+            }
+            
+            render() {
+                return (
+                    <div className="col-md-4 col-lg-4">
+                        <form>
+                            <div className="form-group">
+                                <label>用户名</label>
+                                <input type="text" className="form-control" placeholder="请输入您的用户名" ref={(input) => {this.input = input}}/>
+                            </div>
+                            <div className="form-group">
+                                <label>评论</label>
+                                <textarea className="form-control" rows="3" ref={this.myRef}></textarea>
+                            </div>
+                            <button type="button" className="btn btn-primary btn-md active" onClick={this.onClick}>Submit</button>
+                        </form>
+                    </div>
+                )
+            }
+        }
+
+        class App extends React.Component {
+            state = {
+                comments:[
+                    {id:1,name:"kobe",content:"难啊"},
+                    {id:2,name:"james",content:"都不容易啊"}
+                ]
+            }
+            changeState = (comments) => {
+              this.setState({comments:comments});
+            }
+            deleteComment = (id) => {
+              let {comments} = this.state;
+              let newComments = comments.filter((comment) => {
+                    return comment.id !== id;
+              })
+              this.setState({comments:newComments})
+            }
+            
+            render() {
+                return (
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="jumbotron">
+                            <h1>!!!</h1>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12 col-lg-12 outer">
+                            <Add comments={[...this.state.comments]} changeState={this.changeState}/>
+                            <List comments={[...this.state.comments]} deleteComment={this.deleteComment}/>
+                        </div>
+                    </div>
+                </div>
+                )
+            }
+        }
+        ReactDOM.render(<App/>,document.getElementById('test'));
+    </script>
+</body>
+
+</html>

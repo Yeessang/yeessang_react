@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="list1"></div>
+    <div id="list2"></div>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/babel">
+        class Person extends React.Component{
+            static propTypes = {
+                name:PropTypes.string.isRequired,
+                age:PropTypes.number,
+                gender:PropTypes.string
+            }
+
+            static defaultProps = {
+                age:18,
+                gender:"女"
+            }
+            render(){
+                console.log(this);
+                const {name,age,gender} = this.props;
+                return (<ul>
+                        <li>姓名：{name}</li>
+                        <li>年龄：{age}</li>
+                        <li>性别：{gender}</li>
+                    </ul>)
+            }
+        }
+        let person1 = {
+            name:"james",
+            age:35,
+            gender:"男"
+        }
+        let person2 = {
+            name:"kobe",
+            age:39,
+            gender:"男"
+        }
+        ReactDOM.render(<Person name={person1.name} age={person1.age} gender={person1.gender}/>,document.getElementById('list1'));
+        ReactDOM.render(<Person {...person2}/>,document.getElementById('list2'));
+    </script>
+</body>
+</html>

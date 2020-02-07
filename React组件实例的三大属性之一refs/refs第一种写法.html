@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="test"></div>
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+    <script type="text/babel">
+        class Connection extends React.Component{
+            handleClick = () => {
+              alert(this.refs.input1.value);
+            }
+            handleBlur = (event) => {
+                const {input1} = this.refs;
+                event.target.value = input1.value;
+            }
+            
+            render(){
+                return (
+                    <div>
+                        <input ref="input1" type="text" />
+                        &nbsp;
+                        <button onClick={this.handleClick} type="submit">请点击获取</button>
+                        &nbsp;
+                        <input onBlur={this.handleBlur} type="text" placeholder="失去焦点获取数据"/>
+                    </div>
+                )
+            }
+        }
+
+        ReactDOM.render(<Connection/>,document.getElementById('test'));
+    </script>
+</body>
+
+</html>
