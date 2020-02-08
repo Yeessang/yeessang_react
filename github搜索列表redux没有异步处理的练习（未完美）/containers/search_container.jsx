@@ -3,6 +3,6 @@ import {getUsers} from '../redux/actions/search_action'
 import {connect} from 'react-redux'
 
 export default connect(
-    state => ({...state}),
+    state => ({...state.searchUsers}),
     {getUsers}
 )(Search)

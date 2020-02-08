@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import SearchContainer from './containers/search_container'
-import ListContainer from './containers/list_container'
+import Search from './components/search/search'
+import List from './components/list/list'
 export default class App extends Component {
     render() {
         return (
             <div className="container">
                 <section className="jumbotron">
                 <h3 className="jumbotron-heading">Search Github Users</h3>
-                <SearchContainer />
+                <Search />
                 </section>
-                <ListContainer />
+                <List />
             </div>
         )
     }

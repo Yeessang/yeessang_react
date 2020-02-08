@@ -1,16 +1,21 @@
 import React, { Component } from 'react'
 import Item from '../item/item';
+import PubSub from 'pubsub-js'
 export default class List extends Component {
-    componentWillReceiveProps(){
-        // const changeState = (msg,data) => {
-        //     this.setState(data)
-        // }
-        // PubSub.subscribe('users',changeState)
-        console.log(this.props)
+    state = {
+        isFirst:true,
+        isLoading:false,
+        error:'',
+        users:[]
+    }
+    componentDidMount(){
+        const changeState = (msg,data) => {
+            this.setState(data)
+        }
+        PubSub.subscribe('users',changeState)
     }
     render() {
-        console.log(this)
-        const {isFirst,isLoading,error,users} = this.props;
+        const {isFirst,isLoading,error,users} = this.state;
         if(isFirst){
             return <h2>请输入，点击搜索</h2>
         }else if(isLoading){
