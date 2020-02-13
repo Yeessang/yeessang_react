@@ -5,9 +5,8 @@ let initPersonArr = [
     {title:'科比',describe:'喜欢科比，希望他的精神可以继续影响我'},
 ]
 
-export default function(preState=initPersonArr,action){
+export default function (preState=initPersonArr,action){
     const {type,data} = action
-
     switch (type) {
         case ADDPERSON:
             return [...preState,data]
